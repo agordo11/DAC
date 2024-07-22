@@ -29,7 +29,7 @@ def main():
                 else:
                     # Process the data
                     df_temp = df.copy()
-                    df_temp = df_temp[df_temp.columns[1:]]
+                    df_temp = df_temp[["Name", "Link", "Category", "Extremety"]]
                     
                     all_unique_codes = df_temp[df_temp.columns[-1:]].to_numpy()
                     all_unique_codes = set([item for row in all_unique_codes for item in row])
@@ -42,22 +42,25 @@ def main():
                     elif any(c not in all_unique_codes for c in code):
                         st.error('Invalid character code.')
                     else:
+                        # lift = {
+                        #     "S": [-1] * blocks[0],
+                        #     "A": [-1] * blocks[1],
+                        #     "B": [-1] * blocks[2],
+                        #     "C": [-1] * blocks[3]
+                        # }
                         lift = {
-                            "S": [-1] * blocks[0],
-                            "A": [-1] * blocks[1],
-                            "B": [-1] * blocks[2],
-                            "C": [-1] * blocks[3]
+                            "A": [-1] * blocks[0],
+                            "B": [-1] * blocks[1],
+                            "C": [-1] * blocks[2]
                         }
+
 
                         curr_idx = 0
                         for block in lift:
                             for j, subblock in enumerate(lift[block]):
                                 row = df_temp.sample(n=1)
 
-                                if block == "S":
-                                    curr_cat = block
-                                else:
-                                    curr_cat = block + str(j+1)
+                                curr_cat = block + str(j+1)
                                 
                                 counter = 0
                                 while curr_cat not in row["Category"].iloc[0].split(",") or code[curr_idx] not in row["Extremety"].iloc[0].split(","):
